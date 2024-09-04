@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fund_management_app/presentations/common/common_text_field_widgets.dart';
+import 'package:fund_management_app/presentations/home_screen/bloc/transaction_bloc.dart';
 import 'package:go_router/go_router.dart';
 
 import 'package:fund_management_app/theme/theme_helper.dart';
@@ -8,6 +11,24 @@ class WithdrawScreen extends StatelessWidget {
 
   static const String routeName = '/withdraw-screen';
 
+  @override
+  Widget build(BuildContext context) {
+    return const WithdrawScreenBody();
+  }
+}
+
+class WithdrawScreenBody extends StatefulWidget {
+  const WithdrawScreenBody({super.key});
+
+  @override
+  State<WithdrawScreenBody> createState() => _WithdrawScreenBodyState();
+}
+
+class _WithdrawScreenBodyState extends State<WithdrawScreenBody> {
+  TextEditingController accNumController = TextEditingController();
+  FocusNode accNumFocusNode = FocusNode();
+  TextEditingController amountController = TextEditingController();
+  FocusNode amountFocusNode = FocusNode();
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -34,73 +55,116 @@ class WithdrawScreen extends StatelessWidget {
             ),
           ),
         ),
-        body: Column(
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Container(
-                  height: 24,
-                  width: 24,
-                  decoration: BoxDecoration(
-                    color: const Color.fromRGBO(235, 235, 235, 1),
-                    borderRadius: BorderRadius.circular(4),
+        body: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              const SizedBox(height: 20),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    "Account Number",
+                    style: textTheme.bodySmall!.copyWith(
+                      fontWeight: FontWeight.w400,
+                    ),
                   ),
-                  child: Icon(
-                    Icons.remove,
-                    color: appTheme.black900,
-                    size: 20,
+                  const SizedBox(height: 15),
+                  CommonTextFieldWidget(
+                    hintText: "Enter Account Number",
+                    controller: accNumController,
+                    focusNode: accNumFocusNode,
+                    keyboardType: TextInputType.number,
                   ),
-                ),
-                const SizedBox(
-                  width: 15,
-                ),
-                Text("\$800.00",
-                    style: textTheme.bodyMedium!
-                        .copyWith(fontSize: 40, fontWeight: FontWeight.bold)),
-                const SizedBox(
-                  width: 15,
-                ),
-                Container(
-                  height: 24,
-                  width: 24,
-                  decoration: BoxDecoration(
-                    color: const Color.fromRGBO(235, 235, 235, 1),
-                    borderRadius: BorderRadius.circular(4),
+                  const SizedBox(height: 20),
+                  Text(
+                    "Amount",
+                    style: textTheme.bodySmall!.copyWith(
+                      fontWeight: FontWeight.w400,
+                    ),
                   ),
-                  child: Icon(
-                    Icons.add,
-                    color: appTheme.black900,
-                    size: 20,
+                  const SizedBox(height: 15),
+                  CommonTextFieldWidget(
+                    hintText: "Enter Amount",
+                    controller: amountController,
+                    focusNode: amountFocusNode,
+                    keyboardType: TextInputType.number,
                   ),
-                ),
-              ],
-            ),
-            const SizedBox(
-              height: 20,
-            ),
-            ElevatedButton(
-              onPressed: () {},
-              style: ElevatedButton.styleFrom(
-                backgroundColor: appTheme.primary,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 20,
-                  vertical: 20,
-                ),
+                ],
               ),
-              child: Text(
-                "Withdraw Money",
-                style: textTheme.bodySmall!.copyWith(
-                  color: appTheme.white,
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            )
-          ],
+              const SizedBox(height: 20),
+              BlocConsumer<TransactionBloc, TransactionState>(
+                listener: (context, state) {
+                  if (state is TransactionLoaded) {
+                    accNumController.clear();
+                    amountController.clear();
+                    accNumFocusNode.dispose();
+                    amountFocusNode.dispose();
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text(
+                          "Transferred Successfully",
+                          style: textTheme.bodySmall!.copyWith(
+                              color: appTheme.white,
+                              fontWeight: FontWeight.w400),
+                        ),
+                        backgroundColor: appTheme.primary,
+                      ),
+                    );
+                  }
+                  if (state is TransactionError) {
+                    accNumController.clear();
+                    amountController.clear();
+                    accNumFocusNode.dispose();
+                    amountFocusNode.dispose();
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text(
+                          state.error.toString(),
+                          style: textTheme.bodySmall!.copyWith(
+                              color: appTheme.white,
+                              fontWeight: FontWeight.w400),
+                        ),
+                        backgroundColor: appTheme.red,
+                      ),
+                    );
+                  }
+                },
+                builder: (context, state) {
+                  return ElevatedButton(
+                    onPressed: () {
+                      context.read<TransactionBloc>().add(
+                            Withdraw(
+                              amount: num.parse(amountController.text),
+                            ),
+                          );
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: appTheme.primary,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 20,
+                        vertical: 20,
+                      ),
+                    ),
+                    child: Text(
+                      state is TransactionLoading
+                          ? "Withdrawing..."
+                          : "Withdraw Money",
+                      style: textTheme.bodySmall!.copyWith(
+                        color: appTheme.white,
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  );
+                },
+              )
+            ],
+          ),
         ),
       ),
     );

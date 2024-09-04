@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:fund_management_app/core/utils/image_constant.dart';
-import 'package:fund_management_app/presentations/landing_screen/landing_screen.dart';
 import 'package:fund_management_app/theme/theme_helper.dart';
 import 'package:fund_management_app/widgets/custom_image_view.dart';
 
@@ -16,9 +15,7 @@ class MoreScreen extends StatelessWidget {
           leading: Padding(
             padding: const EdgeInsets.only(left: 10.0),
             child: IconButton(
-              onPressed: () {
-                context.pushReplacement(LandingScreen.routeName);
-              },
+              onPressed: () {},
               icon: Icon(
                 Icons.arrow_back_ios,
                 color: appTheme.primary,

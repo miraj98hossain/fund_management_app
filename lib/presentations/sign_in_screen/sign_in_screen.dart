@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fund_management_app/presentations/common/common_text_field_widgets.dart';
-import 'package:fund_management_app/presentations/landing_screen/landing_screen.dart';
+import 'package:fund_management_app/presentations/home_screen/home_screen.dart';
+
 import 'package:fund_management_app/presentations/sign_in_screen/bloc/sign_in_bloc.dart';
 import 'package:fund_management_app/theme/theme_helper.dart';
 import 'package:go_router/go_router.dart';
@@ -120,7 +121,7 @@ class _SignInScreenBodyState extends State<SignInScreenBody> {
                 BlocConsumer<SignInBloc, SignInState>(
                   listener: (context, state) {
                     if (state is SignInSuccess) {
-                      context.pushReplacementNamed(LandingScreen.routeName);
+                      context.pushReplacementNamed(HomeScreen.routeName);
                     }
                     if (state is SignInError) {
                       ScaffoldMessenger.of(context).showSnackBar(

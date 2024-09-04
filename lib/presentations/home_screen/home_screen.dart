@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fund_management_app/presentations/home_screen/bloc/transaction_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:fund_management_app/core/utils/image_constant.dart';
 import 'package:fund_management_app/presentations/deposite_screen/deposite_screen.dart';
@@ -12,35 +14,52 @@ import 'package:fund_management_app/widgets/custom_image_view.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
+  static const String routeName = '/homeScreen';
+  @override
+  Widget build(BuildContext context) {
+    return const HomeScreenBody();
+  }
+}
 
+class HomeScreenBody extends StatefulWidget {
+  const HomeScreenBody({super.key});
+
+  @override
+  State<HomeScreenBody> createState() => _HomeScreenBodyState();
+}
+
+class _HomeScreenBodyState extends State<HomeScreenBody> {
+  num transactionsBalance = 0;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(
-        children: [
-          Expanded(
-            child: ListView(
-              children: [
-                SizedBox(
-                  height: 100,
-                  child: Stack(
-                    clipBehavior: Clip.none,
-                    children: [
-                      Container(
-                        width: double.infinity,
-                        decoration: BoxDecoration(
-                          color: appTheme.primary,
-                          borderRadius: const BorderRadius.only(
-                              bottomLeft: Radius.circular(20),
-                              bottomRight: Radius.circular(20)),
-                        ),
+      body: BlocBuilder<TransactionBloc, TransactionState>(
+        builder: (context, state) {
+          if (state is TransactionInitial) {
+            transactionsBalance = state.transactionsBalance;
+          }
+          if (state is TransactionLoaded) {
+            transactionsBalance = state.transactionsBalance;
+          }
+          return Column(
+            children: [
+              Expanded(
+                child: ListView(
+                  children: [
+                    Container(
+                      width: double.infinity,
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 20, vertical: 10),
+                      decoration: BoxDecoration(
+                        color: appTheme.primary,
+                        borderRadius: const BorderRadius.only(
+                            bottomLeft: Radius.circular(20),
+                            bottomRight: Radius.circular(20)),
                       ),
-                      Align(
-                        alignment: Alignment.centerLeft,
-                        child: Padding(
-                          padding: const EdgeInsets.all(
-                              16.0), // Add padding if needed
-                          child: Column(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Column(
                             mainAxisSize: MainAxisSize
                                 .min, // Makes column take minimum space required
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -67,18 +86,20 @@ class HomeScreen extends StatelessWidget {
                                   fontWeight: FontWeight.normal,
                                 ),
                               ),
+                              Text(
+                                "$transactionsBalance TK.",
+                                style: textTheme.bodyMedium!.copyWith(
+                                  fontSize: 15,
+                                  color: appTheme.white,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
                             ],
                           ),
-                        ),
-                      ),
-                      InkWell(
-                        onTap: () {
-                          context.pushNamed(MyProfileScreen.routeName);
-                        },
-                        child: Align(
-                          alignment: Alignment.centerRight,
-                          child: Padding(
-                            padding: const EdgeInsets.only(right: 16),
+                          GestureDetector(
+                            onTap: () {
+                              context.pushNamed(MyProfileScreen.routeName);
+                            },
                             child: Container(
                               height: 44,
                               width: 44,
@@ -91,205 +112,205 @@ class HomeScreen extends StatelessWidget {
                               child: CustomImageView(
                                   imagePath: ImageConstant.user),
                             ),
-                          ),
-                        ),
+                          )
+                        ],
                       ),
-                    ],
-                  ),
-                ),
-                const SizedBox(
-                  height: 45,
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      GestureDetector(
-                        onTap: () {
-                          context.pushNamed(DepositeScreen.routeName);
-                        },
-                        child: Container(
-                          height: 90,
-                          width: 80,
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(20),
-                              color: appTheme.secondary),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              CustomImageView(
-                                height: 40,
-                                width: 40,
-                                imagePath: ImageConstant.requestMoney,
+                    ),
+                    const SizedBox(
+                      height: 45,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          GestureDetector(
+                            onTap: () {
+                              context.pushNamed(DepositeScreen.routeName);
+                            },
+                            child: Container(
+                              height: 90,
+                              width: 80,
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(20),
+                                  color: appTheme.secondary),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  CustomImageView(
+                                    height: 40,
+                                    width: 40,
+                                    imagePath: ImageConstant.requestMoney,
+                                  ),
+                                  Text(
+                                    "Deposit",
+                                    style: textTheme.bodySmall!.copyWith(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 10,
+                                      color: appTheme.white,
+                                    ),
+                                  )
+                                ],
                               ),
-                              Text(
-                                "Deposit",
-                                style: textTheme.bodySmall!.copyWith(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 10,
-                                  color: appTheme.white,
-                                ),
-                              )
-                            ],
+                            ),
                           ),
-                        ),
-                      ),
-                      const SizedBox(
-                        width: 10,
-                      ),
-                      GestureDetector(
-                        onTap: () {
-                          context.pushNamed(TransferScreen.routeName);
-                        },
-                        child: Container(
-                          height: 90,
-                          width: 80,
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(20),
-                              color: appTheme.secondary),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              CustomImageView(
-                                height: 40,
-                                width: 40,
-                                imagePath: ImageConstant.dataTransfer,
+                          const SizedBox(
+                            width: 10,
+                          ),
+                          GestureDetector(
+                            onTap: () {
+                              context.pushNamed(TransferScreen.routeName);
+                            },
+                            child: Container(
+                              height: 90,
+                              width: 80,
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(20),
+                                  color: appTheme.secondary),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  CustomImageView(
+                                    height: 40,
+                                    width: 40,
+                                    imagePath: ImageConstant.dataTransfer,
+                                  ),
+                                  Text(
+                                    "Transfer",
+                                    style: textTheme.bodySmall!.copyWith(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 10,
+                                      color: appTheme.white,
+                                    ),
+                                  )
+                                ],
                               ),
-                              Text(
-                                "Transfer",
-                                style: textTheme.bodySmall!.copyWith(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 10,
-                                  color: appTheme.white,
-                                ),
-                              )
-                            ],
+                            ),
                           ),
-                        ),
-                      ),
-                      const SizedBox(
-                        width: 10,
-                      ),
-                      GestureDetector(
-                        onTap: () {
-                          context.pushNamed(WithdrawScreen.routeName);
-                        },
-                        child: Container(
-                          height: 90,
-                          width: 80,
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(20),
-                              color: appTheme.secondary),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              CustomImageView(
-                                height: 40,
-                                width: 40,
-                                imagePath: ImageConstant.checkBook,
+                          const SizedBox(
+                            width: 10,
+                          ),
+                          GestureDetector(
+                            onTap: () {
+                              context.pushNamed(WithdrawScreen.routeName);
+                            },
+                            child: Container(
+                              height: 90,
+                              width: 80,
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(20),
+                                  color: appTheme.secondary),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  CustomImageView(
+                                    height: 40,
+                                    width: 40,
+                                    imagePath: ImageConstant.checkBook,
+                                  ),
+                                  Text(
+                                    "Withdraw",
+                                    style: textTheme.bodySmall!.copyWith(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 10,
+                                      color: appTheme.white,
+                                    ),
+                                  )
+                                ],
                               ),
-                              Text(
-                                "Withdraw",
-                                style: textTheme.bodySmall!.copyWith(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 10,
-                                  color: appTheme.white,
-                                ),
-                              )
-                            ],
+                            ),
                           ),
-                        ),
+                        ],
                       ),
-                    ],
-                  ),
-                ),
-                const SizedBox(
-                  height: 15,
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
-                  child: Row(
-                    children: [
-                      Text(
-                        "Transactions",
-                        style: textTheme.bodyLarge!.copyWith(
-                          fontSize: 20,
+                    ),
+                    const SizedBox(
+                      height: 15,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      child: Row(
+                        children: [
+                          Text(
+                            "Transactions",
+                            style: textTheme.bodyLarge!.copyWith(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          const Spacer(),
+                          GestureDetector(
+                            onTap: () {
+                              context.pushNamed(TransactionsScreen.routeName);
+                            },
+                            child: Text(
+                              "See all",
+                              style: textTheme.bodyLarge!.copyWith(
+                                fontSize: 11,
+                                fontWeight: FontWeight.bold,
+                                decoration: TextDecoration.underline,
+                              ),
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    TransactionsItemWidgets(
+                      icon: ImageConstant.sendIcon,
+                      name: "To Devid Malan",
+                      date: "June 13, 2023",
+                      ammount: "-\$290.00",
+                      transectiontype: Text(
+                        "Sent",
+                        style: textTheme.bodySmall!.copyWith(
+                          fontSize: 11,
                           fontWeight: FontWeight.bold,
+                          color: appTheme.red,
                         ),
                       ),
-                      const Spacer(),
-                      GestureDetector(
-                        onTap: () {
-                          context.pushNamed(TransactionsScreen.routeName);
-                        },
-                        child: Text(
-                          "See all",
-                          style: textTheme.bodyLarge!.copyWith(
-                            fontSize: 11,
-                            fontWeight: FontWeight.bold,
-                            decoration: TextDecoration.underline,
-                          ),
+                    ),
+                    TransactionsItemWidgets(
+                      icon: ImageConstant.checkBookIcon,
+                      name: "To Royal Bank Ltd.",
+                      date: "May 12, 2023",
+                      ammount: "-€1200.00",
+                      transectiontype: Text(
+                        "Withdrawn",
+                        style: textTheme.bodySmall!.copyWith(
+                          fontSize: 11,
+                          fontWeight: FontWeight.bold,
+                          color: appTheme.gray,
                         ),
-                      )
-                    ],
-                  ),
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-                TransactionsItemWidgets(
-                  icon: ImageConstant.sendIcon,
-                  name: "To Devid Malan",
-                  date: "June 13, 2023",
-                  ammount: "-\$290.00",
-                  transectiontype: Text(
-                    "Sent",
-                    style: textTheme.bodySmall!.copyWith(
-                      fontSize: 11,
-                      fontWeight: FontWeight.bold,
-                      color: appTheme.red,
+                      ),
                     ),
-                  ),
-                ),
-                TransactionsItemWidgets(
-                  icon: ImageConstant.checkBookIcon,
-                  name: "To Royal Bank Ltd.",
-                  date: "May 12, 2023",
-                  ammount: "-€1200.00",
-                  transectiontype: Text(
-                    "Withdrawn",
-                    style: textTheme.bodySmall!.copyWith(
-                      fontSize: 11,
-                      fontWeight: FontWeight.bold,
-                      color: appTheme.gray,
+                    TransactionsItemWidgets(
+                      icon: ImageConstant.checkBookIcon,
+                      name: "From Joe Root",
+                      date: "January 1, 2023",
+                      ammount: "C€200.00",
+                      transectiontype: Text(
+                        "Received",
+                        style: textTheme.bodySmall!.copyWith(
+                          fontSize: 11,
+                          fontWeight: FontWeight.bold,
+                          color: appTheme.green,
+                        ),
+                      ),
                     ),
-                  ),
-                ),
-                TransactionsItemWidgets(
-                  icon: ImageConstant.checkBookIcon,
-                  name: "From Joe Root",
-                  date: "January 1, 2023",
-                  ammount: "C€200.00",
-                  transectiontype: Text(
-                    "Received",
-                    style: textTheme.bodySmall!.copyWith(
-                      fontSize: 11,
-                      fontWeight: FontWeight.bold,
-                      color: appTheme.green,
+                    const SizedBox(
+                      height: 10,
                     ),
-                  ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                  ],
                 ),
-                const SizedBox(
-                  height: 10,
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-              ],
-            ),
-          ),
-        ],
+              ),
+            ],
+          );
+        },
       ),
     );
   }

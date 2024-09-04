@@ -1,8 +1,9 @@
+import 'package:fund_management_app/presentations/home_screen/home_screen.dart';
 import 'package:fund_management_app/presentations/sign_in_screen/sign_in_screen.dart';
 import 'package:go_router/go_router.dart';
 
 import 'package:fund_management_app/presentations/deposite_screen/deposite_screen.dart';
-import 'package:fund_management_app/presentations/landing_screen/landing_screen.dart';
+
 import 'package:fund_management_app/presentations/transactions_screen/transactions_screen.dart';
 import 'package:fund_management_app/presentations/transfer_screen/tranfer_screen.dart';
 import 'package:fund_management_app/presentations/my_profile_screen/my_profile_screen.dart';
@@ -17,9 +18,9 @@ final router = GoRouter(
       builder: (context, state) => const SignInScreen(),
     ),
     GoRoute(
-      path: LandingScreen.routeName,
-      name: LandingScreen.routeName,
-      builder: (context, state) => const LandingScreen(),
+      path: HomeScreen.routeName,
+      name: HomeScreen.routeName,
+      builder: (context, state) => const HomeScreen(),
     ),
     GoRoute(
       path: DepositeScreen.routeName,
