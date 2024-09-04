@@ -99,8 +99,8 @@ class _TranferScreenBodyState extends State<TranferScreenBody> {
                   if (state is TransactionLoaded) {
                     accNumController.clear();
                     amountController.clear();
-                    accNumFocusNode.dispose();
-                    amountFocusNode.dispose();
+                    accNumFocusNode.unfocus();
+                    amountFocusNode.unfocus();
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
                         content: Text(
@@ -116,8 +116,8 @@ class _TranferScreenBodyState extends State<TranferScreenBody> {
                   if (state is TransactionError) {
                     accNumController.clear();
                     amountController.clear();
-                    accNumFocusNode.dispose();
-                    amountFocusNode.dispose();
+                    accNumFocusNode.unfocus();
+                    amountFocusNode.unfocus();
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
                         content: Text(

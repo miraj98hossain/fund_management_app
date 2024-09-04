@@ -53,7 +53,7 @@ final class TransactionError extends TransactionState {
 
 class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
   num _transactionsBalance = 0;
-  List<Transaction> _transactions = [];
+  final List<Transaction> _transactions = [];
   TransactionBloc() : super(TransactionInitial(transactionsBalance: 0)) {
     on<Deposit>((event, emit) async {
       emit(TransactionLoading());

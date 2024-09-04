@@ -98,8 +98,8 @@ class _DepositeScreenBodyState extends State<DepositeScreenBody> {
                   if (state is TransactionLoaded) {
                     accNumController.clear();
                     amountController.clear();
-                    accNumFocusNode.dispose();
-                    amountFocusNode.dispose();
+                    accNumFocusNode.unfocus();
+                    amountFocusNode.unfocus();
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
                         content: Text(
@@ -115,8 +115,8 @@ class _DepositeScreenBodyState extends State<DepositeScreenBody> {
                   if (state is TransactionError) {
                     accNumController.clear();
                     amountController.clear();
-                    accNumFocusNode.dispose();
-                    amountFocusNode.dispose();
+                    accNumFocusNode.unfocus();
+                    amountFocusNode.unfocus();
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
                         content: Text(
