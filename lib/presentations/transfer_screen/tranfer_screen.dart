@@ -137,6 +137,7 @@ class _TranferScreenBodyState extends State<TranferScreenBody> {
                       context.read<TransactionBloc>().add(
                             Tranfer(
                               amount: num.parse(amountController.text),
+                              accountNo: accNumController.text,
                             ),
                           );
                     },

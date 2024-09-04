@@ -137,6 +137,7 @@ class _WithdrawScreenBodyState extends State<WithdrawScreenBody> {
                       context.read<TransactionBloc>().add(
                             Withdraw(
                               amount: num.parse(amountController.text),
+                              accountNo: accNumController.text,
                             ),
                           );
                     },

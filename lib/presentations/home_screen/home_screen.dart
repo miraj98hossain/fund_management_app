@@ -121,8 +121,7 @@ class _HomeScreenBodyState extends State<HomeScreenBody> {
                     ),
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 20),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
+                      child: Column(
                         children: [
                           GestureDetector(
                             onTap: () {
@@ -130,7 +129,7 @@ class _HomeScreenBodyState extends State<HomeScreenBody> {
                             },
                             child: Container(
                               height: 90,
-                              width: 80,
+                              width: double.infinity,
                               decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(20),
                                   color: appTheme.secondary),
@@ -155,7 +154,40 @@ class _HomeScreenBodyState extends State<HomeScreenBody> {
                             ),
                           ),
                           const SizedBox(
-                            width: 10,
+                            height: 20,
+                          ),
+                          GestureDetector(
+                            onTap: () {
+                              context.pushNamed(WithdrawScreen.routeName);
+                            },
+                            child: Container(
+                              height: 90,
+                              width: double.infinity,
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(20),
+                                  color: appTheme.secondary),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  CustomImageView(
+                                    height: 40,
+                                    width: 40,
+                                    imagePath: ImageConstant.checkBook,
+                                  ),
+                                  Text(
+                                    "Withdraw",
+                                    style: textTheme.bodySmall!.copyWith(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 10,
+                                      color: appTheme.white,
+                                    ),
+                                  )
+                                ],
+                              ),
+                            ),
+                          ),
+                          const SizedBox(
+                            height: 20,
                           ),
                           GestureDetector(
                             onTap: () {
@@ -163,7 +195,7 @@ class _HomeScreenBodyState extends State<HomeScreenBody> {
                             },
                             child: Container(
                               height: 90,
-                              width: 80,
+                              width: double.infinity,
                               decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(20),
                                   color: appTheme.secondary),
@@ -188,15 +220,15 @@ class _HomeScreenBodyState extends State<HomeScreenBody> {
                             ),
                           ),
                           const SizedBox(
-                            width: 10,
+                            height: 20,
                           ),
                           GestureDetector(
                             onTap: () {
-                              context.pushNamed(WithdrawScreen.routeName);
+                              context.pushNamed(TransactionsScreen.routeName);
                             },
                             child: Container(
                               height: 90,
-                              width: 80,
+                              width: double.infinity,
                               decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(20),
                                   color: appTheme.secondary),
@@ -206,10 +238,11 @@ class _HomeScreenBodyState extends State<HomeScreenBody> {
                                   CustomImageView(
                                     height: 40,
                                     width: 40,
-                                    imagePath: ImageConstant.checkBook,
+                                    color: appTheme.white,
+                                    imagePath: ImageConstant.sendIcon,
                                   ),
                                   Text(
-                                    "Withdraw",
+                                    "Transactions",
                                     style: textTheme.bodySmall!.copyWith(
                                       fontWeight: FontWeight.bold,
                                       fontSize: 10,
@@ -222,89 +255,7 @@ class _HomeScreenBodyState extends State<HomeScreenBody> {
                           ),
                         ],
                       ),
-                    ),
-                    const SizedBox(
-                      height: 15,
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20),
-                      child: Row(
-                        children: [
-                          Text(
-                            "Transactions",
-                            style: textTheme.bodyLarge!.copyWith(
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          const Spacer(),
-                          GestureDetector(
-                            onTap: () {
-                              context.pushNamed(TransactionsScreen.routeName);
-                            },
-                            child: Text(
-                              "See all",
-                              style: textTheme.bodyLarge!.copyWith(
-                                fontSize: 11,
-                                fontWeight: FontWeight.bold,
-                                decoration: TextDecoration.underline,
-                              ),
-                            ),
-                          )
-                        ],
-                      ),
-                    ),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    TransactionsItemWidgets(
-                      icon: ImageConstant.sendIcon,
-                      name: "To Devid Malan",
-                      date: "June 13, 2023",
-                      ammount: "-\$290.00",
-                      transectiontype: Text(
-                        "Sent",
-                        style: textTheme.bodySmall!.copyWith(
-                          fontSize: 11,
-                          fontWeight: FontWeight.bold,
-                          color: appTheme.red,
-                        ),
-                      ),
-                    ),
-                    TransactionsItemWidgets(
-                      icon: ImageConstant.checkBookIcon,
-                      name: "To Royal Bank Ltd.",
-                      date: "May 12, 2023",
-                      ammount: "-€1200.00",
-                      transectiontype: Text(
-                        "Withdrawn",
-                        style: textTheme.bodySmall!.copyWith(
-                          fontSize: 11,
-                          fontWeight: FontWeight.bold,
-                          color: appTheme.gray,
-                        ),
-                      ),
-                    ),
-                    TransactionsItemWidgets(
-                      icon: ImageConstant.checkBookIcon,
-                      name: "From Joe Root",
-                      date: "January 1, 2023",
-                      ammount: "C€200.00",
-                      transectiontype: Text(
-                        "Received",
-                        style: textTheme.bodySmall!.copyWith(
-                          fontSize: 11,
-                          fontWeight: FontWeight.bold,
-                          color: appTheme.green,
-                        ),
-                      ),
-                    ),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    const SizedBox(
-                      height: 10,
-                    ),
+                    )
                   ],
                 ),
               ),

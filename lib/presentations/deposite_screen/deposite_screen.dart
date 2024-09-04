@@ -136,6 +136,7 @@ class _DepositeScreenBodyState extends State<DepositeScreenBody> {
                       context.read<TransactionBloc>().add(
                             Deposit(
                               amount: num.parse(amountController.text),
+                              accountNo: accNumController.text,
                             ),
                           );
                     },

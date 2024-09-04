@@ -1,20 +1,33 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fund_management_app/models/transaction_model.dart';
 
 sealed class TransactionEvent {}
 
 final class Deposit extends TransactionEvent {
   final num amount;
-  Deposit({required this.amount});
+  final String accountNo;
+  Deposit({
+    required this.amount,
+    required this.accountNo,
+  });
 }
 
 final class Tranfer extends TransactionEvent {
   final num amount;
-  Tranfer({required this.amount});
+  final String accountNo;
+  Tranfer({
+    required this.amount,
+    required this.accountNo,
+  });
 }
 
 final class Withdraw extends TransactionEvent {
   final num amount;
-  Withdraw({required this.amount});
+  final String accountNo;
+  Withdraw({
+    required this.amount,
+    required this.accountNo,
+  });
 }
 
 sealed class TransactionState {}
@@ -28,7 +41,9 @@ final class TransactionLoading extends TransactionState {}
 
 final class TransactionLoaded extends TransactionState {
   final num transactionsBalance;
-  TransactionLoaded({required this.transactionsBalance});
+  final List<Transaction> transactions;
+  TransactionLoaded(
+      {required this.transactionsBalance, required this.transactions});
 }
 
 final class TransactionError extends TransactionState {
@@ -38,33 +53,61 @@ final class TransactionError extends TransactionState {
 
 class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
   num _transactionsBalance = 0;
+  List<Transaction> _transactions = [];
   TransactionBloc() : super(TransactionInitial(transactionsBalance: 0)) {
     on<Deposit>((event, emit) async {
       emit(TransactionLoading());
       _transactionsBalance += event.amount;
+      _transactions.add(Transaction(
+        amount: event.amount,
+        accountNumber: event.accountNo,
+        date: DateTime.now(),
+        type: "deposit",
+      ));
       await Future.delayed(const Duration(seconds: 1), () {
-        emit(TransactionLoaded(transactionsBalance: _transactionsBalance));
+        emit(TransactionLoaded(
+          transactionsBalance: _transactionsBalance,
+          transactions: _transactions,
+        ));
       });
     });
     on<Tranfer>((event, emit) async {
       emit(TransactionLoading());
-      if (_transactionsBalance <= 0) {
+      if (_transactionsBalance <= 0 || _transactionsBalance < event.amount) {
         emit(TransactionError(error: "Insufficient Balance"));
       } else {
         _transactionsBalance -= event.amount;
+        _transactions.add(Transaction(
+          amount: event.amount,
+          accountNumber: event.accountNo,
+          date: DateTime.now(),
+          type: "transfer",
+        ));
         await Future.delayed(const Duration(seconds: 1), () {
-          emit(TransactionLoaded(transactionsBalance: _transactionsBalance));
+          emit(TransactionLoaded(
+            transactionsBalance: _transactionsBalance,
+            transactions: _transactions,
+          ));
         });
       }
     });
     on<Withdraw>((event, emit) async {
       emit(TransactionLoading());
-      if (_transactionsBalance <= 0) {
+      if (_transactionsBalance <= 0 || _transactionsBalance < event.amount) {
         emit(TransactionError(error: "Insufficient Balance"));
       } else {
         _transactionsBalance -= event.amount;
+        _transactions.add(Transaction(
+          amount: event.amount,
+          accountNumber: event.accountNo,
+          date: DateTime.now(),
+          type: "withdraw",
+        ));
         await Future.delayed(const Duration(seconds: 1), () {
-          emit(TransactionLoaded(transactionsBalance: _transactionsBalance));
+          emit(TransactionLoaded(
+            transactionsBalance: _transactionsBalance,
+            transactions: _transactions,
+          ));
         });
       }
     });
