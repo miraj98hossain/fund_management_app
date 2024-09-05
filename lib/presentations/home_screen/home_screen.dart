@@ -130,6 +130,12 @@ class _HomeScreenBodyState extends State<HomeScreenBody> {
                       ),
                       BlocBuilder<TransactionBloc, TransactionState>(
                         builder: (context, state) {
+                          if (state is TransactionInitial) {
+                            data.clear();
+                            data.addAll([
+                              _ChartData("DEPOSIT", 0),
+                            ]);
+                          }
                           if (state is TransactionLoaded) {
                             data.clear();
                             var groupedData = groupBy(state.transactions,
@@ -137,23 +143,32 @@ class _HomeScreenBodyState extends State<HomeScreenBody> {
                             groupedData.forEach(
                               (key, value) {
                                 num total = 0;
-                                value.forEach(
-                                  (element) {
-                                    total += element.amount;
-                                  },
-                                );
-                                data.add(_ChartData(key, total));
+                                for (var element in value) {
+                                  total += element.amount;
+                                }
+                                data.add(_ChartData(key.toUpperCase(), total));
                               },
                             );
                           }
-                          return Container(
+
+                          return SizedBox(
                             width: double.infinity,
                             height: 200,
                             child: SfCircularChart(
+                              title: ChartTitle(
+                                text: "Total Transactions",
+                                textStyle: textTheme.bodySmall!.copyWith(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.bold,
+                                  color: appTheme.primary,
+                                ),
+                              ),
                               legend: const Legend(
-                                  isVisible: true,
-                                  alignment: ChartAlignment.center,
-                                  position: LegendPosition.left),
+                                isVisible: true,
+                                alignment: ChartAlignment.center,
+                                position: LegendPosition.left,
+                                overflowMode: LegendItemOverflowMode.wrap,
+                              ),
                               tooltipBehavior: _tooltip,
                               series: <CircularSeries<_ChartData, String>>[
                                 DoughnutSeries<_ChartData, String>(
