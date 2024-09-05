@@ -1,5 +1,5 @@
 import 'package:fund_management_app/presentations/home_screen/home_screen.dart';
-import 'package:fund_management_app/presentations/performance_chart_screen/performance_chart_screen.dart';
+
 import 'package:fund_management_app/presentations/sign_in_screen/sign_in_screen.dart';
 import 'package:go_router/go_router.dart';
 
@@ -47,11 +47,6 @@ final router = GoRouter(
       path: MyProfileScreen.routeName,
       name: MyProfileScreen.routeName,
       builder: (context, state) => const MyProfileScreen(),
-    ),
-    GoRoute(
-      path: PerformanceChartScreen.routeName,
-      name: PerformanceChartScreen.routeName,
-      builder: (context, state) => const PerformanceChartScreen(),
     ),
   ],
 );

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fund_management_app/presentations/home_screen/bloc/transaction_bloc.dart';
-import 'package:fund_management_app/presentations/performance_chart_screen/performance_chart_screen.dart';
+
 import 'package:go_router/go_router.dart';
 import 'package:fund_management_app/core/utils/image_constant.dart';
 import 'package:fund_management_app/presentations/deposite_screen/deposite_screen.dart';
@@ -395,7 +395,7 @@ class TransactionsItemWidgets extends StatelessWidget {
               Row(
                 children: [
                   Text(
-                    ammount,
+                    "$ammount Tk.",
                     style: textTheme.bodySmall!.copyWith(
                       fontSize: 13,
                       fontWeight: FontWeight.bold,
