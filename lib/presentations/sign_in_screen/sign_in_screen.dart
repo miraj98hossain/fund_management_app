@@ -33,6 +33,7 @@ class _SignInScreenBodyState extends State<SignInScreenBody> {
   TextEditingController passwordController = TextEditingController();
   FocusNode emailFocusNode = FocusNode();
   FocusNode passwordFocusNode = FocusNode();
+  GlobalKey<FormState> formKey = GlobalKey<FormState>();
   @override
   void dispose() {
     emailController.dispose();
@@ -55,146 +56,174 @@ class _SignInScreenBodyState extends State<SignInScreenBody> {
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text(
-                  "Sign In",
-                  style: textTheme.bodySmall!.copyWith(
-                    fontWeight: FontWeight.w700,
-                  ),
-                ),
-                const SizedBox(height: 20),
-                Text(
-                  "Email",
-                  style: textTheme.bodySmall!.copyWith(
-                    fontWeight: FontWeight.w400,
-                  ),
-                ),
-                const SizedBox(height: 15),
-                CommonTextFieldWidget(
-                  hintText: "Enter your email",
-                  controller: emailController,
-                  focusNode: emailFocusNode,
-                  keyboardType: TextInputType.emailAddress,
-                ),
-                const SizedBox(height: 20),
-                Text(
-                  "Password",
-                  style: textTheme.bodySmall!.copyWith(
-                    fontWeight: FontWeight.w400,
-                  ),
-                ),
-                const SizedBox(height: 15),
-                CommonTextFieldWidget(
-                  controller: passwordController,
-                  focusNode: passwordFocusNode,
-                  hintText: "Enter your password",
-                  keyboardType: TextInputType.text,
-                  obscureText: obscureText,
-                  suffix: GestureDetector(
-                    onTap: () {
-                      setState(() {
-                        obscureText = !obscureText;
-                      });
-                    },
-                    child: Icon(
-                      obscureText
-                          ? Icons.visibility_off_outlined
-                          : Icons.visibility_outlined,
-                      size: 24,
-                      color: appTheme.primary,
+                Center(
+                  child: Text(
+                    "Sign In",
+                    style: textTheme.bodyMedium!.copyWith(
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
                 ),
-                const SizedBox(height: 10),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    Text(
-                      "Forgot Password?",
-                      style: textTheme.bodySmall!.copyWith(
-                        color: appTheme.primary,
-                        fontWeight: FontWeight.w400,
-                      ),
-                    )
-                  ],
-                ),
-                const SizedBox(height: 20),
-                BlocConsumer<SignInBloc, SignInState>(
-                  listener: (context, state) {
-                    if (state is SignInSuccess) {
-                      context.pushReplacementNamed(HomeScreen.routeName);
-                    }
-                    if (state is SignInError) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text(
-                            state.error.toString(),
-                            style: textTheme.bodySmall!.copyWith(
-                                color: appTheme.white,
-                                fontWeight: FontWeight.w400),
-                          ),
-                          backgroundColor: appTheme.red,
-                        ),
-                      );
-                    }
-                  },
-                  builder: (context, state) {
-                    return GestureDetector(
-                      onTap: () {
-                        context.read<SignInBloc>().add(SignIn(
-                            email: emailController.text,
-                            password: passwordController.text));
-                      },
-                      child: Align(
-                        alignment: Alignment.center,
-                        child: Container(
-                          margin: const EdgeInsets.symmetric(horizontal: 20),
-                          padding: const EdgeInsets.symmetric(
-                            vertical: 15,
-                            horizontal: 20,
-                          ),
-                          decoration: BoxDecoration(
-                            color: appTheme.primary,
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          child: Center(
-                            child: Text(
-                              state is SignInLoading
-                                  ? "Singning In..."
-                                  : "Sign In",
-                              style: textTheme.bodySmall!.copyWith(
-                                color: appTheme.white,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                    );
-                  },
-                ),
-                const SizedBox(height: 10),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      "Don’t have account? ",
-                      style: textTheme.bodySmall!.copyWith(
-                        color: appTheme.primary,
-                        fontWeight: FontWeight.w400,
-                      ),
-                    ),
-                    GestureDetector(
-                      onTap: () {},
-                      child: Text(
-                        "Sign Up",
+                Form(
+                  key: formKey,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const SizedBox(height: 20),
+                      Text(
+                        "Email",
                         style: textTheme.bodySmall!.copyWith(
-                          color: appTheme.primary,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                    ),
-                  ],
+                      const SizedBox(height: 15),
+                      CommonTextFieldWidget(
+                        hintText: "Enter your email",
+                        controller: emailController,
+                        focusNode: emailFocusNode,
+                        keyboardType: TextInputType.emailAddress,
+                        validator: (p0) {
+                          if (p0 == null || p0.isEmpty) {
+                            return "Please Enter Email";
+                          }
+                          return null;
+                        },
+                      ),
+                      const SizedBox(height: 20),
+                      Text(
+                        "Password",
+                        style: textTheme.bodySmall!.copyWith(
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      const SizedBox(height: 15),
+                      CommonTextFieldWidget(
+                        controller: passwordController,
+                        focusNode: passwordFocusNode,
+                        hintText: "Enter your password",
+                        keyboardType: TextInputType.text,
+                        obscureText: obscureText,
+                        suffix: GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              obscureText = !obscureText;
+                            });
+                          },
+                          child: Icon(
+                            obscureText
+                                ? Icons.visibility_off_outlined
+                                : Icons.visibility_outlined,
+                            size: 24,
+                            color: appTheme.primary,
+                          ),
+                        ),
+                        validator: (p0) {
+                          if (p0 == null || p0.isEmpty) {
+                            return "Please Enter Password";
+                          }
+                          return null;
+                        },
+                      ),
+                      const SizedBox(height: 10),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          Text(
+                            "Forgot Password?",
+                            style: textTheme.bodySmall!.copyWith(
+                              color: appTheme.primary,
+                              fontWeight: FontWeight.w400,
+                            ),
+                          )
+                        ],
+                      ),
+                      const SizedBox(height: 20),
+                      BlocConsumer<SignInBloc, SignInState>(
+                        listener: (context, state) {
+                          if (state is SignInSuccess) {
+                            context.pushReplacementNamed(HomeScreen.routeName);
+                          }
+                          if (state is SignInError) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text(
+                                  state.error.toString(),
+                                  style: textTheme.bodySmall!.copyWith(
+                                      color: appTheme.white,
+                                      fontWeight: FontWeight.w400),
+                                ),
+                                backgroundColor: appTheme.red,
+                              ),
+                            );
+                          }
+                        },
+                        builder: (context, state) {
+                          return GestureDetector(
+                            onTap: () {
+                              if (formKey.currentState!.validate()) {
+                                context.read<SignInBloc>().add(
+                                      SignIn(
+                                        email: emailController.text,
+                                        password: passwordController.text,
+                                      ),
+                                    );
+                              }
+                            },
+                            child: Align(
+                              alignment: Alignment.center,
+                              child: Container(
+                                margin:
+                                    const EdgeInsets.symmetric(horizontal: 20),
+                                padding: const EdgeInsets.symmetric(
+                                  vertical: 15,
+                                  horizontal: 20,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: appTheme.primary,
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                                child: Center(
+                                  child: Text(
+                                    state is SignInLoading
+                                        ? "Singning In..."
+                                        : "Sign In",
+                                    style: textTheme.bodySmall!.copyWith(
+                                      color: appTheme.white,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                      const SizedBox(height: 10),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            "Don’t have account? ",
+                            style: textTheme.bodySmall!.copyWith(
+                              color: appTheme.primary,
+                              fontWeight: FontWeight.w400,
+                            ),
+                          ),
+                          GestureDetector(
+                            onTap: () {},
+                            child: Text(
+                              "Sign Up",
+                              style: textTheme.bodySmall!.copyWith(
+                                color: appTheme.primary,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 60),
+                    ],
+                  ),
                 ),
-                const SizedBox(height: 60),
               ],
             ),
           ),

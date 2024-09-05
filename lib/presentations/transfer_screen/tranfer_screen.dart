@@ -29,6 +29,7 @@ class _TranferScreenBodyState extends State<TranferScreenBody> {
   FocusNode accNumFocusNode = FocusNode();
   TextEditingController amountController = TextEditingController();
   FocusNode amountFocusNode = FocusNode();
+  GlobalKey<FormState> formKey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -61,37 +62,52 @@ class _TranferScreenBodyState extends State<TranferScreenBody> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               const SizedBox(height: 20),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    "Account Number",
-                    style: textTheme.bodySmall!.copyWith(
-                      fontWeight: FontWeight.w400,
+              Form(
+                key: formKey,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      "Account Number",
+                      style: textTheme.bodySmall!.copyWith(
+                        fontWeight: FontWeight.w400,
+                      ),
                     ),
-                  ),
-                  const SizedBox(height: 15),
-                  CommonTextFieldWidget(
-                    hintText: "Enter Account Number",
-                    controller: accNumController,
-                    focusNode: accNumFocusNode,
-                    keyboardType: TextInputType.number,
-                  ),
-                  const SizedBox(height: 20),
-                  Text(
-                    "Amount",
-                    style: textTheme.bodySmall!.copyWith(
-                      fontWeight: FontWeight.w400,
+                    const SizedBox(height: 15),
+                    CommonTextFieldWidget(
+                      hintText: "Enter Account Number",
+                      controller: accNumController,
+                      focusNode: accNumFocusNode,
+                      keyboardType: TextInputType.number,
+                      validator: (p0) {
+                        if (p0 == null || p0.isEmpty) {
+                          return "Please Enter Account Number";
+                        }
+                        return null;
+                      },
                     ),
-                  ),
-                  const SizedBox(height: 15),
-                  CommonTextFieldWidget(
-                    hintText: "Enter Amount",
-                    controller: amountController,
-                    focusNode: amountFocusNode,
-                    keyboardType: TextInputType.number,
-                  ),
-                ],
+                    const SizedBox(height: 20),
+                    Text(
+                      "Amount",
+                      style: textTheme.bodySmall!.copyWith(
+                        fontWeight: FontWeight.w400,
+                      ),
+                    ),
+                    const SizedBox(height: 15),
+                    CommonTextFieldWidget(
+                      hintText: "Enter Amount",
+                      controller: amountController,
+                      focusNode: amountFocusNode,
+                      keyboardType: TextInputType.number,
+                      validator: (p0) {
+                        if (p0 == null || p0.isEmpty) {
+                          return "Please Enter Amount";
+                        }
+                        return null;
+                      },
+                    ),
+                  ],
+                ),
               ),
               const SizedBox(height: 20),
               BlocConsumer<TransactionBloc, TransactionState>(
@@ -134,12 +150,14 @@ class _TranferScreenBodyState extends State<TranferScreenBody> {
                 builder: (context, state) {
                   return ElevatedButton(
                     onPressed: () {
-                      context.read<TransactionBloc>().add(
-                            Tranfer(
-                              amount: num.parse(amountController.text),
-                              accountNo: accNumController.text,
-                            ),
-                          );
+                      if (formKey.currentState!.validate()) {
+                        context.read<TransactionBloc>().add(
+                              Tranfer(
+                                amount: num.parse(amountController.text),
+                                accountNo: accNumController.text,
+                              ),
+                            );
+                      }
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: appTheme.primary,

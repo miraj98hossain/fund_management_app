@@ -10,6 +10,7 @@ class CommonTextFieldWidget extends StatelessWidget {
     this.obscureText = false,
     this.controller,
     this.focusNode,
+    this.validator,
   });
   final String? hintText;
   final Widget? suffix;
@@ -17,45 +18,81 @@ class CommonTextFieldWidget extends StatelessWidget {
   final bool obscureText;
   final TextEditingController? controller;
   final FocusNode? focusNode;
+  final String? Function(String?)? validator;
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: 48,
-      width: double.infinity,
-      padding: const EdgeInsets.only(left: 20),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(10),
-        border: Border.all(color: appTheme.primary),
+    return TextFormField(
+      controller: controller,
+      focusNode: focusNode,
+      enableSuggestions: false,
+      autocorrect: false,
+      keyboardType: keyboardType ?? TextInputType.text,
+      obscureText: obscureText,
+      cursorColor: appTheme.primary,
+      textAlign: TextAlign.left,
+      textAlignVertical: TextAlignVertical.center,
+      style: textTheme.bodySmall!.copyWith(
+        color: appTheme.primary,
+        fontWeight: FontWeight.w400,
+        decoration: TextDecoration.none,
       ),
-      child: TextField(
-        controller: controller,
-        focusNode: focusNode,
-        enableSuggestions: false,
-        autocorrect: false,
-        keyboardType: keyboardType ?? TextInputType.text,
-        obscureText: obscureText,
-        cursorColor: appTheme.primary,
-        textAlign: TextAlign.left,
-        textAlignVertical: TextAlignVertical.center,
-        style: textTheme.bodySmall!.copyWith(
+      decoration: InputDecoration(
+        hintText: hintText,
+        hintStyle: textTheme.bodySmall!.copyWith(
           color: appTheme.primary,
+          fontWeight: FontWeight.w400,
+        ),
+        suffixIcon: suffix ?? const SizedBox(),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(10),
+          borderSide: BorderSide(
+            color: appTheme.primary,
+          ),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(10),
+          borderSide: BorderSide(
+            color: appTheme.primary,
+          ),
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(10),
+          borderSide: BorderSide(
+            color: appTheme.primary,
+          ),
+        ),
+        errorBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(10),
+          borderSide: BorderSide(
+            color: appTheme.red,
+          ),
+        ),
+        disabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(10),
+          borderSide: BorderSide(
+            color: appTheme.primary.withOpacity(0.5),
+          ),
+        ),
+        focusedErrorBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(10),
+          borderSide: BorderSide(
+            color: appTheme.red,
+          ),
+        ),
+        errorStyle: textTheme.bodySmall!.copyWith(
+          color: appTheme.red,
           fontWeight: FontWeight.w400,
           decoration: TextDecoration.none,
         ),
-        decoration: InputDecoration(
-          hintText: hintText,
-          hintStyle: textTheme.bodySmall!.copyWith(
-            color: appTheme.primary,
-            fontWeight: FontWeight.w400,
-          ),
-          suffixIcon: suffix ?? const SizedBox(),
-          border: InputBorder.none,
-          focusedBorder: InputBorder.none,
-          enabledBorder: InputBorder.none,
-          errorBorder: InputBorder.none,
-          disabledBorder: InputBorder.none,
-        ),
       ),
+      validator: validator,
     );
   }
 }
+//  height: 48,
+//       width: double.infinity,
+//       padding: const EdgeInsets.only(left: 20),
+//       decoration: BoxDecoration(
+//         borderRadius: BorderRadius.circular(10),
+//         border: Border.all(color: appTheme.primary),
+//       ),
